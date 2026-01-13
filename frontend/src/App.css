@@ -1,0 +1,41 @@
+.App {
+  min-height: 100vh;
+  background-color: #0f0f10;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1c;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4a4a4c;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #5a5a5c;
+}
+
+/* Smooth transitions */
+* {
+  transition: background-color 0.2s ease;
+}
+
+/* Input focus states */
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #84cc16;
+}
+
+/* Button hover effects */
+button {
+  transition: all 0.2s ease;
+}
