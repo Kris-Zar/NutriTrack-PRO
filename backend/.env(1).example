@@ -1,8 +1,0 @@
-# Leave these unset for the public demo mode.
-DEMO_MODE=true
-CORS_ORIGINS=*
-
-# Optional production integrations:
-# GOOGLE_API_KEY=your_google_api_key_here
-# MONGO_URL=mongodb://localhost:27017/nutritrack
-# DB_NAME=nutritrack

@@ -1,2 +1,0 @@
-# Local default is http://localhost:8000. Set this to your Render API URL in Vercel.
-REACT_APP_BACKEND_URL=http://localhost:8000
