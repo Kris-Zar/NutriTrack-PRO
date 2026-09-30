@@ -1,6 +1,5 @@
 from datetime import date, datetime, timezone
 import asyncio
-import base64
 import logging
 import os
 from pathlib import Path
@@ -19,8 +18,10 @@ except ImportError:  # pragma: no cover - demo mode does not need the AI package
 
 try:
     from google import genai
+    from google.genai import types
 except ImportError:  # pragma: no cover - demo mode does not need the Gemini SDK
     genai = None
+    types = None
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / ".env")
@@ -102,7 +103,13 @@ async def root():
 
 @api_router.get("/health")
 async def health():
-    return {"status": "ok", "mode": "demo" if DEMO_MODE else "production", "database": "memory" if DEMO_MODE else "mongodb"}
+    return {
+        "status": "ok",
+        "mode": "demo" if DEMO_MODE else "production",
+        "database": "memory" if DEMO_MODE else "mongodb",
+        "gemini_configured": bool(os.environ.get("GOOGLE_API_KEY")),
+        "gemini_sdk_available": genai is not None and types is not None,
+    }
 
 
 @api_router.post("/profile", response_model=UserProfile)
@@ -178,7 +185,7 @@ async def analyze_food_image(file: UploadFile = File(...)):
     google_api_key = os.environ.get("GOOGLE_API_KEY")
     if not file.content_type or not file.content_type.startswith("image/"):
         raise HTTPException(status_code=400, detail="Please upload an image file")
-    if not google_api_key or not genai:
+    if not google_api_key or not genai or not types:
         return AnalyzedFood(
             food_name="Demo grain bowl",
             calories=520,
@@ -189,7 +196,6 @@ async def analyze_food_image(file: UploadFile = File(...)):
         )
 
     try:
-        base64_image = base64.b64encode(contents).decode("utf-8")
         prompt = """Analyze this food image and provide:
 1. Food name
 2. Estimated calories (kcal)
@@ -208,18 +214,14 @@ Description: [brief description]"""
 
         def request_analysis():
             gemini_client = genai.Client(api_key=google_api_key)
-            interaction = gemini_client.interactions.create(
+            response = gemini_client.models.generate_content(
                 model=os.environ.get("GEMINI_MODEL", "gemini-2.5-flash"),
-                input=[
-                    {"type": "text", "text": prompt},
-                    {
-                        "type": "image",
-                        "data": base64_image,
-                        "mime_type": file.content_type,
-                    },
+                contents=[
+                    prompt,
+                    types.Part.from_bytes(data=contents, mime_type=file.content_type),
                 ],
             )
-            return interaction.output_text
+            return response.text
 
         response = await asyncio.to_thread(request_analysis)
         if not response:

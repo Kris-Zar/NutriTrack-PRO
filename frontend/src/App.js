@@ -130,7 +130,7 @@ function App() {
 
       <footer className="bg-[#1a1a1c] border-t border-gray-800 py-4">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <p className="text-gray-500 text-sm">Created by Gyanendra & Developed by Parth</p>
+          <p className="text-gray-500 text-sm">Designed & Developed by Parth</p>
           <p className="text-gray-500 text-sm">App is still in development and soon will come with all new features</p>
         </div>
       </footer>
