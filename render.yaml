@@ -8,9 +8,13 @@ services:
     plan: free
     envVars:
       - key: DEMO_MODE
-        value: "true"
+        sync: false
       - key: CORS_ORIGINS
-        value: "*"
+        sync: false
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: MONGO_URL
+        sync: false
   - type: web
     name: nutritrack-frontend
     runtime: static

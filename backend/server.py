@@ -1,4 +1,5 @@
 from datetime import date, datetime, timezone
+import asyncio
 import base64
 import logging
 import os
@@ -17,9 +18,9 @@ except ImportError:  # pragma: no cover - demo mode does not need the AI package
     AsyncIOMotorClient = None
 
 try:
-    from emergentintegrations.llm.chat import ImageContent, LlmChat, UserMessage
-except ImportError:  # pragma: no cover - demo mode does not need the AI package
-    ImageContent = LlmChat = UserMessage = None
+    from google import genai
+except ImportError:  # pragma: no cover - demo mode does not need the Gemini SDK
+    genai = None
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / ".env")
@@ -175,7 +176,9 @@ async def delete_food(food_id: str):
 async def analyze_food_image(file: UploadFile = File(...)):
     contents = await file.read()
     google_api_key = os.environ.get("GOOGLE_API_KEY")
-    if not google_api_key or not LlmChat:
+    if not file.content_type or not file.content_type.startswith("image/"):
+        raise HTTPException(status_code=400, detail="Please upload an image file")
+    if not google_api_key or not genai:
         return AnalyzedFood(
             food_name="Demo grain bowl",
             calories=520,
@@ -187,11 +190,6 @@ async def analyze_food_image(file: UploadFile = File(...)):
 
     try:
         base64_image = base64.b64encode(contents).decode("utf-8")
-        chat = LlmChat(
-            api_key=google_api_key,
-            session_id=f"food-analysis-{uuid.uuid4()}",
-            system_message="You are a nutrition expert. Analyze food images and provide detailed nutritional information.",
-        ).with_model("gemini", "gemini-2.0-flash")
         prompt = """Analyze this food image and provide:
 1. Food name
 2. Estimated calories (kcal)
@@ -207,7 +205,25 @@ Protein: [number]g
 Carbs: [number]g
 Fats: [number]g
 Description: [brief description]"""
-        response = await chat.send_message(UserMessage(text=prompt, file_contents=[ImageContent(image_base64=base64_image)]))
+
+        def request_analysis():
+            gemini_client = genai.Client(api_key=google_api_key)
+            interaction = gemini_client.interactions.create(
+                model=os.environ.get("GEMINI_MODEL", "gemini-2.5-flash"),
+                input=[
+                    {"type": "text", "text": prompt},
+                    {
+                        "type": "image",
+                        "data": base64_image,
+                        "mime_type": file.content_type,
+                    },
+                ],
+            )
+            return interaction.output_text
+
+        response = await asyncio.to_thread(request_analysis)
+        if not response:
+            raise ValueError("Gemini returned an empty response")
         food_data = {}
         for line in response.strip().split("\n"):
             if ":" not in line:
@@ -230,6 +246,8 @@ Description: [brief description]"""
             fats=food_data.get("fats", 0),
             description=food_data.get("description", "Food analysis completed"),
         )
+    except HTTPException:
+        raise
     except Exception as exc:
         logging.exception("Error analyzing food image")
         raise HTTPException(status_code=500, detail=f"Failed to analyze image: {exc}")
