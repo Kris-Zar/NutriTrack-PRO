@@ -105,6 +105,7 @@ NutriTrack-PRO/
 
 ## ✦ Getting Started
 
+<<<<<<< HEAD
 ## ✦ Public Demo Deployment
 
 The project supports a demo mode that does not require MongoDB or a Google API key. In demo mode, profiles and meals are stored in memory and image analysis returns a sample nutrition estimate so visitors can try the full workflow without exposing credentials.
@@ -125,6 +126,11 @@ No API key belongs in the frontend or in GitHub. Vercel is also supported as an 
 ### Prerequisites
 
 For the full production path, install and configure:
+=======
+### Prerequisites
+
+Ensure the following are installed and configured before running the project:
+>>>>>>> dca9e4730058693d6d1f5eb4b0c71e7e9308615b
 
 - [Node.js](https://nodejs.org/) `v18+`
 - [Python](https://www.python.org/) `v3.9+`
@@ -159,20 +165,35 @@ pip install -r requirements.txt
 cp .env.example .env
 ```
 
+<<<<<<< HEAD
 For demo mode, `.env` is optional. To enable the live AI and MongoDB integrations, fill in:
 
 ```env
 GOOGLE_API_KEY=your_google_api_key_here
 MONGO_URL=mongodb://localhost:27017/nutritrack
 DB_NAME=nutritrack
+=======
+Open `.env` and fill in your credentials:
+
+```env
+GOOGLE_API_KEY=your_google_api_key_here
+MONGO_URI=mongodb://localhost:27017/nutritrack
+>>>>>>> dca9e4730058693d6d1f5eb4b0c71e7e9308615b
 ```
 
 ```bash
 # Start the backend server
+<<<<<<< HEAD
 uvicorn server:app --reload --port 8000
 ```
 
 The API will be running at `http://localhost:8000`.
+=======
+python app.py
+```
+
+The API will be running at `http://localhost:5000` (or your configured port).
+>>>>>>> dca9e4730058693d6d1f5eb4b0c71e7e9308615b
 
 ---
 
@@ -186,7 +207,11 @@ cd frontend
 npm install
 
 # Start the development server
+<<<<<<< HEAD
 npm start
+=======
+npm run dev
+>>>>>>> dca9e4730058693d6d1f5eb4b0c71e7e9308615b
 ```
 
 Open [http://localhost:5173](http://localhost:5173) in your browser.
@@ -197,12 +222,18 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 | Variable | Required | Description |
 |---|---|---|
+<<<<<<< HEAD
 | `GOOGLE_API_KEY` | Optional | Enables live Gemini image analysis; demo mode uses a sample result without it |
 | `MONGO_URL` | Optional | Enables MongoDB persistence; demo mode uses in-memory storage without it |
 | `DB_NAME` | Optional | MongoDB database name, default `nutritrack` |
 | `DEMO_MODE` | Optional | Set to `true` to force the no-key demo path |
 | `CORS_ORIGINS` | Optional | Comma-separated frontend origins, default `*` |
 | `REACT_APP_BACKEND_URL` | Frontend | Public backend URL used by the React build |
+=======
+| `GOOGLE_API_KEY` | ✅ Yes | Google Vision / AI API key for food analysis |
+| `MONGO_URI` | ✅ Yes | MongoDB connection string |
+| `PORT` | Optional | Backend server port (default: `5000`) |
+>>>>>>> dca9e4730058693d6d1f5eb4b0c71e7e9308615b
 
 > ⚠️ **Never commit your `.env` file.** It is listed in `.gitignore` by default.
 
@@ -210,9 +241,15 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ## ✦ Known Limitations
 
+<<<<<<< HEAD
 - Demo-mode data is stored in memory and resets when the backend restarts
 - Live image analysis requires a Google API key
 - MongoDB is required only when persistent production storage is desired
+=======
+- **Image analysis** requires a valid Google API key — requests will fail without it
+- **Profile saving** requires a running MongoDB instance
+- Currently designed for local development; cloud deployment requires additional configuration
+>>>>>>> dca9e4730058693d6d1f5eb4b0c71e7e9308615b
 
 ---
 
