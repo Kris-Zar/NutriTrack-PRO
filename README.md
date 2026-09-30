@@ -15,7 +15,7 @@
 
 > **Try it live →** [https://nutritrack-frontend-behf.onrender.com](https://nutritrack-frontend-behf.onrender.com)
 
-> ⚠️ Hosted on Render's free tier — the server may take 30–60 seconds to wake up on first load.
+> ⚠️ Hosted on Render's free tier — the server may take 30–60 seconds to wake up on first load. Also this is a Demo Link only for full capability testing and usage clone the local setup.
 
 ---
 
