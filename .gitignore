@@ -3,10 +3,7 @@
 
 # Node
 node_modules/
-<<<<<<< HEAD
 .npm-cache/
-=======
->>>>>>> dca9e4730058693d6d1f5eb4b0c71e7e9308615b
 
 # Python
 venv/
