@@ -19,7 +19,7 @@ A fullstack app to log meals, track macros, and hit your daily nutrition goals �
 
 > **[https://nutritrack-frontend-behf.onrender.com](https://nutritrack-frontend-behf.onrender.com)**
 
-> ⚠️ Hosted on Render's free tier — the backend may take **30–60 seconds to wake up** on first load. The demo runs in `DEMO_MODE` (in-memory storage, no database required). For full persistent storage, clone the repo and run locally with MongoDB.
+> ⚠️ Hosted on Render's free tier — the backend may take **30–60 seconds to wake up** on first load. The demo runs in `DEMO_MODE` (in-memory storage, no database required). For full persistent storage and AI capabilities, clone the repo and run locally with MongoDB.
 
 ---
 
